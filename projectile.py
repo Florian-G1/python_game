@@ -4,7 +4,7 @@ import pygame
 # Définir la classe qui va gérer les projectiles du joueur.
 class Projectile(pygame.sprite.Sprite):
 
-    # Définir le construteur de cette classe.
+    # Définir le constructeur de cette classe.
     def __init__(self, player):
         super().__init__()
         self.velocity = 1
@@ -17,7 +17,7 @@ class Projectile(pygame.sprite.Sprite):
         self.origin_image = self.image
         self.angle = 0
 
-    # Fait tourné le projectile.
+    # Fait tourner le projectile.
     def rotate(self):
         self.angle += 1
         self.image = pygame.transform.rotozoom(self.origin_image, self.angle, 1)
@@ -27,9 +27,13 @@ class Projectile(pygame.sprite.Sprite):
     def remove(self):
         self.player.all_projectile.remove(self)
 
-    # Déplace le projectile et le supprime quand il sort de l'écran.
+    # Déplace le projectile et le supprime quand nécessaire.
     def move(self):
         self.rect.x += self.velocity
         self.rotate()
+        # Suppression lors de la collision avec un monstre.
+        if self.player.game.check_collision(self, self.player.game.all_monster):
+            self.remove()
+        # Suppression en sortie d'écran.
         if self.rect.x > 1080:
             self.remove()

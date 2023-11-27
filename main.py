@@ -25,6 +25,13 @@ while running:
     # Appliquer l'image de mon joueur.
     screen.blit(game.player.image, game.player.rect)
 
+    # Récupérer tous les projectiles en cour et les faire avancer.
+    for projectile in game.player.all_projectile:
+        projectile.move()
+
+    # Applique l'ensemble des image du groupe projectile.
+    game.player.all_projectile.draw(screen)
+
     # Vérifier si le joueur veut aller à gauche ou à droite.
     if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x+game.player.rect.width < 1115:
         game.player.move_right()
@@ -36,7 +43,7 @@ while running:
 
     # Si le joueur ferme la fenetre.
     for event in pygame.event.get():
-        # On verifie que l'élément est la fermeture de la fenètre
+        # On verifie que l'élément est la fermeture de la fenètre.
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
@@ -44,5 +51,10 @@ while running:
         # Détécter si le joueur appuie sur un touche.
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
+
+            # Détécter si c'est la touche espace qui est enclenché
+            if event.key == pygame.K_SPACE:
+                game.player.launch_projectile()
+
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False

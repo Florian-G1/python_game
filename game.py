@@ -2,6 +2,7 @@ import pygame
 from python_game.player import Player
 
 
+
 # Création d'une classe qui va représenter le jeu.
 class Game:
 

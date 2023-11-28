@@ -18,6 +18,15 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 400
         self.rect.y = 500
 
+    def damage(self, amount):
+        if self.health - amount > amount:
+            self.health -= amount
+
+    def update_health_bar(self, surface):
+        # Dessiner notre barre de vie.
+        pygame.draw.rect(surface, (60, 60, 60), [self.rect.x + 50, self.rect.y + 20, self.max_health, 8])
+        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 50, self.rect.y + 20, self.health, 8])
+
     def launch_projectile(self):
         # Créer une nouvelle instance de la classe Projectile dans le groupe.
         self.all_projectile.add(Projectile(self))
@@ -27,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         # Le déplacement vers la droite est possible que s'il n'y a pas de collision.
         if not self.game.check_collision(self, self.game.all_monster):
             self.rect.x += self.velocity
+
 
     def move_left(self):
         self.rect.x -= self.velocity

@@ -21,6 +21,8 @@ class Player(pygame.sprite.Sprite):
     def damage(self, amount):
         if self.health - amount > amount:
             self.health -= amount
+        else:
+            self.game.game_over()
 
     def update_health_bar(self, surface):
         # Dessiner notre barre de vie.
@@ -36,7 +38,6 @@ class Player(pygame.sprite.Sprite):
         # Le déplacement vers la droite est possible que s'il n'y a pas de collision.
         if not self.game.check_collision(self, self.game.all_monster):
             self.rect.x += self.velocity
-
 
     def move_left(self):
         self.rect.x -= self.velocity

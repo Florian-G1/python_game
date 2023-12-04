@@ -5,6 +5,9 @@ from python_game.game import Game
 
 pygame.init()
 
+clock = pygame.time.Clock()
+FPS = 120
+
 # Générer la fenêtre de notre jeu.
 pygame.display.set_caption("Comet fall game")
 screen = pygame.display.set_mode((1080, 720))
@@ -31,6 +34,9 @@ running = True
 
 # Boucle tant que cette variable est vrai, le jeu tourne.
 while running:
+
+    # Régule le framerate pour adapter la vitesse du jeu.
+    clock.tick(FPS)
 
     # Applique l'arrière-plan du jeu.
     screen.blit(background, (0, -200))
@@ -60,7 +66,13 @@ while running:
 
             # Détecter si c'est la touche espace qui est enclenché
             if event.key == pygame.K_SPACE:
-                game.player.launch_projectile()
+                if game.is_playing:
+                    game.player.launch_projectile()
+                else:
+                    # Lancement du jeu.
+                    game.start()
+                    # Jouer le son de lancement.
+                    game.sound_manager.play('click')
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
@@ -70,3 +82,5 @@ while running:
             if play_button_rect.collidepoint(event.pos):
                 # Lancement du jeu.
                 game.start()
+                # Jouer le son de lancement.
+                game.sound_manager.play('click')

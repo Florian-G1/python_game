@@ -9,20 +9,22 @@ class Monster(animation.AnimateSprite):
     def __init__(self, game, name, size, offset=0):
         super().__init__(name, size)
         self. game = game
-        self.health = 100
-        self.max_health = 100
         self.attack = 0.3
         self.rect = self.image.get_rect()
         self.rect.x = 1000 + random.randint(0, 300)
         self.rect.y = 540 - offset
-        self.loot_amount = 20
+        self.max_health_bar_length = 100
+
+    def set_max_heath(self, max_health, wave_multiplier=5):
+        self.max_health = max_health + wave_multiplier * self.game.current_wave
+        print(self.max_health)
 
     def set_speed(self, speed):
         self.default_speed = speed
         self.velocity = random.randint(1, self.default_speed)
 
-    def set_loot_amount(self, loot_amount):
-        self.loot_amount = loot_amount
+    def set_loot_amount(self, loot_amount, wave_multiplier=5):
+        self.loot_amount = loot_amount + wave_multiplier * self.game.current_wave
 
     def damage(self, amount):
         self.health -= amount
@@ -45,8 +47,9 @@ class Monster(animation.AnimateSprite):
 
     def update(self, surface):
         # Dessiner notre barre de vie.
-        pygame.draw.rect(surface, (60, 60, 60), [self.rect.x + 15, self.rect.y - 20, self.max_health, 5])
-        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 15, self.rect.y - 20, self.health, 5])
+        health_bar_length = self.health * self.max_health_bar_length / self.max_health
+        pygame.draw.rect(surface, (60, 60, 60), [self.rect.x + 15, self.rect.y - 20, self.max_health_bar_length, 5])
+        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 15, self.rect.y - 20, health_bar_length, 5])
         self.animate()
 
     # Fonction qui fait avancer le monstre.
@@ -65,6 +68,8 @@ class Mummy(Monster):
     
     def __init__(self, game):
         super().__init__(game, "mummy", (130, 130))
+        self.set_max_heath(50)
+        self.health = self.max_health
         self.set_speed(3)
         self.set_loot_amount(20)
 
@@ -74,8 +79,9 @@ class Alien(Monster):
     
     def __init__(self, game):
         super().__init__(game, "alien", (300, 300), 130)
-        self.health = 250
-        self.max_health = self.health
+        self.set_max_heath(100, 10)
+        self.health = self.max_health
         self.set_speed(1)
         self.attack = 0.8
-        self.set_loot_amount(50)
+        self.set_loot_amount(50, 10)
+        self.max_health_bar_length = 250

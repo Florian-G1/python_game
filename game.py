@@ -25,15 +25,21 @@ class Game:
         self.score = 0
         self.font = pygame.font.SysFont("monospace", 24)
         self.pressed = {}
+        # Générer le décompte des vagues.
+        self.current_wave = 0
 
     def start(self):
         self.is_playing = True
         self.spawn_monster(Mummy)
         self.spawn_monster(Mummy)
         self.spawn_monster(Alien)
+        self.increase_wave()
 
     def add_score(self, loot_amount):
         self.score += loot_amount
+
+    def increase_wave(self):
+        self.current_wave += 1
 
     def game_over(self):
         # Remettre le jeu à 0, retirer les monstres, remettre les pv au joueur...
@@ -44,13 +50,18 @@ class Game:
         self.player.health = self.player.max_health
         self.is_playing = False
         self.score = 0
+        self.current_wave = 0
         # Jouer le son de game over.
         self.sound_manager.play('game_over')
 
     def update(self, screen):
         # Afficher le score.
-        score_text = self.font.render(f"Score : {self.score}", 1, (0, 0, 0))
+        score_text = self.font.render(f"Score : {self.score}", 1, (0, 0, 0),)
         screen.blit(score_text, (20, 20))
+
+        # Afficher la vague actuelle.
+        current_wave_text = self.font.render(f"Vague : {self.current_wave}", 1, (0, 0, 0), )
+        screen.blit(current_wave_text, (480, 20))
 
         # Appliquer l'image de mon joueur.
         screen.blit(self.player.image, self.player.rect)
@@ -68,12 +79,12 @@ class Game:
         for projectile in self.player.all_projectile:
             projectile.move()
 
-        # Récupérer tous les monstres en cours et les faire avancer.
+        # Récupérer tous les monstres en cours et les faire avancer et actualiser leurs états.
         for monster in self.all_monster:
             monster.forward()
             monster.update(screen)
 
-        # Récupérer tous les monstres en cours et les faire avancer et actualise leurs états.
+        # Récupérer toutes les comètes en cours et les faire avancer.
         for comets in self.comet_event.all_comets:
             comets.fall()
 

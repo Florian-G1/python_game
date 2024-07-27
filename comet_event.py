@@ -25,8 +25,10 @@ class CometFallEvent:
         self.percent = 0
 
     def meteor_fall(self):
-        for i in range(1,10):
-            # Faire apparaitre une première comète.
+        comet_number = 10 + self.game.current_wave
+        print(comet_number)
+        for i in range(1,comet_number):
+            # Faire apparaitre une comète.
             self.all_comets.add(Comet(self))
 
     def attempt_fall(self):

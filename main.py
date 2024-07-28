@@ -1,7 +1,7 @@
 import pygame
 import math
-from python_game.game import Game
-from python_game.highscore import Highscore
+from game import Game
+from highscore import Highscore
 
 
 pygame.init()
@@ -15,23 +15,23 @@ pygame.display.set_caption("Comet fall game")
 screen = pygame.display.set_mode((1080, 720))
 
 # Importer l'arrière-plan du jeu.
-background = pygame.image.load('PygameAssets-main/PygameAssets-main/bg.jpg')
+background = pygame.image.load('assets/bg.jpg')
 
 # Importer la bannière.
-banner = pygame.image.load('PygameAssets-main/PygameAssets-main/banner.png')
+banner = pygame.image.load('assets/banner.png')
 banner = pygame.transform.scale(banner, (500, 500))
 banner_rect = banner.get_rect()
 banner_rect.x = math.ceil(screen.get_width() / 2 - banner.get_width() / 2)
 
 # Importer le fond pour les scores.
-score_background = pygame.image.load('PygameAssets-main/PygameAssets-main/score_screen.png')
+score_background = pygame.image.load('assets/score_screen.png')
 score_background = pygame.transform.scale(score_background, (900, 600))
 score_background_rect = score_background.get_rect()
 score_background_rect.x = math.ceil(screen.get_width() / 2 - score_background.get_width() / 2)
 score_background_rect.y = math.ceil(screen.get_height() / 2 - score_background.get_height() / 2)
 
 # Importer le bouton pour lancer jeu.
-play_button = pygame.image.load('PygameAssets-main/PygameAssets-main/button.png')
+play_button = pygame.image.load('assets/button.png')
 play_button = pygame.transform.scale(play_button, (400, 150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = math.ceil(screen.get_width() / 2 - play_button.get_width() / 2)

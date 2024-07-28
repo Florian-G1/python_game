@@ -7,9 +7,9 @@ class Highscore:
         self.file_name = file
         self.read_file(self.file_name)
         self.new_highscore = False
-        self.font = pygame.font.Font("PygameAssets-main/PygameAssets-main/ubuntu.ttf", 24)
-        self.highscore_font = pygame.font.Font("PygameAssets-main/PygameAssets-main/ubuntu.ttf", 40)
-        self.title_font = pygame.font.Font("PygameAssets-main/PygameAssets-main/ubuntu.ttf", 50)
+        self.font = pygame.font.Font("assets/ubuntu.ttf", 24)
+        self.highscore_font = pygame.font.Font("assets/ubuntu.ttf", 40)
+        self.title_font = pygame.font.Font("assets/ubuntu.ttf", 50)
 
     def read_file(self, file_name):
         # Récupérer la liste de score enregistré

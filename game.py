@@ -1,5 +1,5 @@
 import pygame
-from python_game.player import Player
+from player import Player
 from monster import Monster, Mummy, Alien
 from comet_event import CometFallEvent
 from sound import SoundManager
@@ -25,7 +25,7 @@ class Game:
         self.comet_event = CometFallEvent(self)
         # Générer le score.
         self.score = 0
-        self.font = pygame.font.Font("PygameAssets-main/PygameAssets-main/ubuntu.ttf", 24)
+        self.font = pygame.font.Font("assets/ubuntu.ttf", 24)
         self.pressed = {}
         # Générer le décompte des vagues.
         self.current_wave = 0

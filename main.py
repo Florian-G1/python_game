@@ -1,10 +1,12 @@
 import pygame
 import math
 from python_game.game import Game
+from python_game.highscore import Highscore
 
 
 pygame.init()
 
+save_file_name = "highscore.txt"
 clock = pygame.time.Clock()
 FPS = 120
 
@@ -21,14 +23,25 @@ banner = pygame.transform.scale(banner, (500, 500))
 banner_rect = banner.get_rect()
 banner_rect.x = math.ceil(screen.get_width() / 2 - banner.get_width() / 2)
 
+# Importer le fond pour les scores.
+score_background = pygame.image.load('PygameAssets-main/PygameAssets-main/score_screen.png')
+score_background = pygame.transform.scale(score_background, (900, 600))
+score_background_rect = score_background.get_rect()
+score_background_rect.x = math.ceil(screen.get_width() / 2 - score_background.get_width() / 2)
+score_background_rect.y = math.ceil(screen.get_height() / 2 - score_background.get_height() / 2)
+
 # Importer le bouton pour lancer jeu.
 play_button = pygame.image.load('PygameAssets-main/PygameAssets-main/button.png')
 play_button = pygame.transform.scale(play_button, (400, 150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = math.ceil(screen.get_width() / 2 - play_button.get_width() / 2)
 play_button_rect.y = math.ceil(screen.get_height() / 2)
+
+# Charger les highscores.
+highscore = Highscore(save_file_name)
+
 # Charger notre jeu.
-game = Game()
+game = Game(highscore)
 
 running = True
 
@@ -45,6 +58,9 @@ while running:
     if game.is_playing:
         # Déclencher les instructions de la partie
         game.update(screen)
+    elif game.lose:
+        screen.blit(score_background,score_background_rect)
+        highscore.print(screen)
     else:
         # Ajouter l'écran de bienvenue
         screen.blit(play_button, play_button_rect)
@@ -57,6 +73,7 @@ while running:
     for event in pygame.event.get():
         # On vérifie que l'élément est la fermeture de la fenêtre.
         if event.type == pygame.QUIT:
+            highscore.save(save_file_name)
             running = False
             pygame.quit()
             print("Fermeture du jeu.")
@@ -68,7 +85,12 @@ while running:
             if event.key == pygame.K_SPACE:
                 if game.is_playing:
                     game.player.launch_projectile()
+                elif game.lose:
+                    # Retour à l'écran titre.
+                    game.replay()
                 else:
+                    # Nettoyer le tableau des scores.
+                    highscore.clean()
                     # Lancement du jeu.
                     game.start()
                     # Jouer le son de lancement.
@@ -79,8 +101,14 @@ while running:
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Verification pour savoir si la souris est en collision avec le bouton de lancement
-            if play_button_rect.collidepoint(event.pos):
+            if play_button_rect.collidepoint(event.pos) and not game.is_playing and not game.lose:
+                # Nettoyer le tableau des scores.
+                highscore.clean()
                 # Lancement du jeu.
                 game.start()
                 # Jouer le son de lancement.
+                game.sound_manager.play('click')
+            elif game.lose:
+                # Retour à l'écran titre
+                game.replay()
                 game.sound_manager.play('click')

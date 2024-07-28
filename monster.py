@@ -17,7 +17,7 @@ class Monster(animation.AnimateSprite):
 
     def set_max_heath(self, max_health, wave_multiplier=5):
         self.max_health = max_health + wave_multiplier * self.game.current_wave
-        print(self.max_health)
+        self.health = self.max_health
 
     def set_speed(self, speed):
         self.default_speed = speed

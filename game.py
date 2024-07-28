@@ -8,9 +8,11 @@ from sound import SoundManager
 # Création d'une classe qui va représenter le jeu.
 class Game:
 
-    def __init__(self):
+    def __init__(self, highscore):
         # Définir si le jeu a commencé ou non.
         self.is_playing = False
+        # Définir si le joueur a déjà perdu.
+        self.lose = False
         # Générer le gestionnaire de son.
         self.sound_manager = SoundManager()
         # Générer le joueur.
@@ -23,10 +25,12 @@ class Game:
         self.comet_event = CometFallEvent(self)
         # Générer le score.
         self.score = 0
-        self.font = pygame.font.SysFont("monospace", 24)
+        self.font = pygame.font.Font("PygameAssets-main/PygameAssets-main/ubuntu.ttf", 24)
         self.pressed = {}
         # Générer le décompte des vagues.
         self.current_wave = 0
+        # Conserve l'accès aux Highscores.
+        self.highscore = highscore
 
     def start(self):
         self.is_playing = True
@@ -34,6 +38,9 @@ class Game:
         self.spawn_monster(Mummy)
         self.spawn_monster(Alien)
         self.increase_wave()
+
+    def replay(self):
+        self.lose = False
 
     def add_score(self, loot_amount):
         self.score += loot_amount
@@ -49,14 +56,16 @@ class Game:
         self.comet_event.reset_percent()
         self.player.health = self.player.max_health
         self.is_playing = False
+        self.highscore.new_score(self.score)
         self.score = 0
         self.current_wave = 0
         # Jouer le son de game over.
         self.sound_manager.play('game_over')
+        self.lose = True
 
     def update(self, screen):
         # Afficher le score.
-        score_text = self.font.render(f"Score : {self.score}", 1, (0, 0, 0),)
+        score_text = self.font.render(f"Score : {self.score}", 1, (0, 0, 0), )
         screen.blit(score_text, (20, 20))
 
         # Afficher la vague actuelle.
